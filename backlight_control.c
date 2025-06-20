@@ -12,6 +12,8 @@
 #define MAX(a, b) ((a > b) ? a : b)
 #define MIN(a, b) ((a < b) ? a : b)
 
+FILE *open_file(char *name);
+
 void print_usage(char *name) {
 	printf(
 		"Usage: %1$s [+|-]<value>\n"
@@ -19,9 +21,27 @@ void print_usage(char *name) {
 		"Examples:\n"
 		"\t%1$s +10\n"
 		"\t%1$s -10\n"
+		"\t%1$s =8000\n"
 		"\t%1$s 50\n",
 		name
 	);
+}
+
+void print_brightness_info() {
+	int brightness_value = 0;
+
+	FILE *brightness = open_file(BRIGHTNESS_FILE);
+
+	fscanf(brightness, "%d", &brightness_value);
+	fclose(brightness);
+
+	printf("\n"
+			"Max brightness: %d\n"
+			"Min brightness: %d\n"
+			"Current brightness: %d\n",
+			MAX_BRIGHTNESS,
+			MIN_BRIGHTNESS,
+			brightness_value);
 }
 
 FILE *open_file(char *name) {
@@ -36,6 +56,7 @@ FILE *open_file(char *name) {
 int main(int argc, char **argv) {
 	if (argc != 2) {
 		print_usage(argv[0]);
+		print_brightness_info();
 		return EXIT_FAILURE;
 	}
 	int value = strtol(argv[1], NULL, 10);
@@ -46,6 +67,11 @@ int main(int argc, char **argv) {
 		case '-':
 			fscanf(brightness, "%d", &brightness_value);
 			brightness_value += MAX_BRIGHTNESS * value / 100;
+			break;
+		case '=':
+			value = strtol(argv[1] + 1, NULL, 10);
+			brightness_value = MAX(MIN_BRIGHTNESS, value);
+			brightness_value = MIN(MAX_BRIGHTNESS, brightness_value);
 			break;
 		default:
 			brightness_value = MAX_BRIGHTNESS * value / 100;
