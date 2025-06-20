@@ -21,8 +21,8 @@ void print_usage(char *name) {
 		"Examples:\n"
 		"\t%1$s +10\n"
 		"\t%1$s -10\n"
-		"\t%1$s =8000\n"
-		"\t%1$s 50\n",
+		"\t%1$s =100\n"
+		"\t%1$s 8000\n",
 		name
 	);
 }
@@ -70,11 +70,10 @@ int main(int argc, char **argv) {
 			break;
 		case '=':
 			value = strtol(argv[1] + 1, NULL, 10);
-			brightness_value = MAX(MIN_BRIGHTNESS, value);
-			brightness_value = MIN(MAX_BRIGHTNESS, brightness_value);
+			brightness_value = MAX_BRIGHTNESS * value / 100;
 			break;
 		default:
-			brightness_value = MAX_BRIGHTNESS * value / 100;
+			brightness_value = value;
 	}
 	brightness_value = MIN(brightness_value, MAX_BRIGHTNESS);
 	brightness_value = MAX(brightness_value, MIN_BRIGHTNESS);
