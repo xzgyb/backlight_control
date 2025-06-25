@@ -22,7 +22,7 @@ void print_usage(char *name) {
 		"\t%1$s +10\n"
 		"\t%1$s -10\n"
 		"\t%1$s =100\n"
-		"\t%1$s 8000\n",
+		"\t%1$s 10464\n",
 		name
 	);
 }
